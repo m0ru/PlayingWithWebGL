@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+</head>
+<body>
+  <canvas id="glcanvas" width="500" height="350">
+    I have to regrettfully inform you, that your browser has a certain lack of support for the  <code>&lt;canvas&gt;</code>-element.
+  </canvas>
+
+  <a href="https://developer.mozilla.org/en-US/docs/Web/WebGL/Adding_2D_content_to_a_WebGL_context#The_shaders">Stopped Here</a>
+
+  <!--<script id="shader-fs" type="x-shader/x-fragment">
+  </script>
+
+  <script id="shader-vs" type="x-shader/x-vertex">
+  </script>-->
+
+    <!-- #page>div.logo+ul#navigation>li*5>a{Item $} emmet fun time :3 -->
+  <script>
+    document.addEventListener("DOMContentLoaded", glInit)
+
+    var canvas, gl;
+
+    function glInit() {
+      canvas = document.getElementById("glcanvas");
+      gl = canvas.getContext("webgl");
+
+      //allow resizing (the gl-context doesn't automatically update)
+      canvas.addEventListener("resize", function(){
+        gl.viewport(0, 0, canvas.width, canvas.height);
+      });
+
+      if(!gl) {
+        alert("I have to regrettfully inform you, that your browser has a certain lack of support for the the pleasures of WebGL.")
+      } else {
+        initShaders(gl)
+        gl.clearColor(0.0, 0.0, 0.0, 1.0);
+        /*gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL) // near things obscure far things */
+        //gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT) // clear color and depth buffer
+        gl.clear(gl.COLOR_BUFFER_BIT);
+      }
+    }
+
+    function initShaders(gl) {
+      shaderProgram = gl.createProgram();
+      gl.attachShader(shaderProgram, fragmentShader())
+      gl.attachShader(shaderProgram, vertexShader())
+    }
+
+    function buildShader(type, source) {
+      shader = gl.createShader(type);
+      gl.shaderSource(shader, source);
+      gl.compileShader(shader);
+      if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.err("Apparently the shader specified in \
+        this humble source isn't entirely bug-free and \
+        doesn't compile. We're deeply sorry and want \
+        to apologize for the inconvenience.")
+        console.err(gl.getShaderInfoLog(shader))
+      }
+      return shader
+    }
+
+    function fragmentShader() {
+      var source = " \
+        void main(void) { \
+          gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); \
+        } \
+      ";
+      return buildShader(gl.VERTEX_SHADER, source);
+    }
+
+    function vertexShader() {
+      var source = " \
+        attribute vec3 aVertexPosition; \
+        \
+        uniform mat4 uMVMatrix; \
+        uniform mat4 uPMatrix; \
+        \
+        void main(void) { \
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0); \
+        } \
+      ";
+      return buildShader(gl.FRAGMENT_SHADER, source);
+    }
+
+
+  </script>
+
+</body>
+</html>
